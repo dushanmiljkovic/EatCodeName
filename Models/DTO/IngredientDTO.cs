@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Models.DTO
+﻿namespace Models.DTO
 {
-    public class IngredientDTO
+    public class IngredientDTO : IBindingModel
     {
         public string Unit { get; set; }
         public int UnitCount { get; set; }

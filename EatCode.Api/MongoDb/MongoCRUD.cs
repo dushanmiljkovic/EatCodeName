@@ -3,9 +3,6 @@ using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using MongoDB.Driver.GridFS;
-using System.IO;
 
 
 namespace EatCode.Api.MongoDb
@@ -21,7 +18,7 @@ namespace EatCode.Api.MongoDb
             this.tableName = tableName;
         }
 
-        public abstract void Seed(); 
+        public abstract void Seed();
 
         public virtual void InsertRecord<T>(T record)
         {
@@ -58,7 +55,7 @@ namespace EatCode.Api.MongoDb
             var collection = _contex.GetCollection<T>(tableName);
             var filter = Builders<T>.Filter.Eq("Id", id);
             collection.DeleteOne(filter);
-        } 
-    } 
+        }
+    }
 }
 

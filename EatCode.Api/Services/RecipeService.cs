@@ -5,16 +5,14 @@ using Models.Domein;
 using Models.DTO;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
- 
+
 namespace EatCode.Api.Services
 {
     public class RecipeService : IRecipeService
-    { 
+    {
         private readonly IMapper mapper;
         private readonly RecipeRepository repository;
-         
+
         public RecipeService(IConfiguration configuration, IMapper mapper)
         {
             repository = new RecipeRepository(configuration);
@@ -30,7 +28,7 @@ namespace EatCode.Api.Services
                 return true;
             }
             catch (Exception ex)
-            { 
+            {
                 Serilog.Log.Error(ex.Message);
                 return false;
             }
@@ -53,7 +51,7 @@ namespace EatCode.Api.Services
         public RecipeDTO GetRecipe(Guid id)
         {
             try
-            { 
+            {
                 var result = repository.LoadRecordById<Recipe>(id);
                 var model = mapper.Map<RecipeDTO>(result);
                 return model;
@@ -70,7 +68,7 @@ namespace EatCode.Api.Services
             try
             {
                 var db = repository.LoadRecords<Recipe>();
-                var result = mapper.Map<List<RecipeDTO>>(db); 
+                var result = mapper.Map<List<RecipeDTO>>(db);
                 return result;
             }
             catch (Exception ex)

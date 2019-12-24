@@ -1,8 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EatCode.Api.MongoDb
 {
@@ -21,6 +18,6 @@ namespace EatCode.Api.MongoDb
         public override void Seed()
         {
             throw new NotImplementedException();
-        } 
+        }
     }
 }

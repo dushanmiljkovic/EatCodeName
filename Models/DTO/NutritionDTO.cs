@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Models.DTO
+﻿namespace Models.DTO
 {
-    public class NutritionDTO
+    public class NutritionDTO : IBindingModel
     {
         public int Kcal { get; set; }
         public int Fat { get; set; } //in grams

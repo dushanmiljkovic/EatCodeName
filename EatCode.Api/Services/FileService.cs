@@ -5,8 +5,6 @@ using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver.GridFS;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EatCode.Api.Services
@@ -76,7 +74,7 @@ namespace EatCode.Api.Services
         public async Task<GridFSDownloadStream<ObjectId>> DownloadAsyncAsStreamByName(string name)
         {
             try
-            { 
+            {
                 return await repository.DownloadAsync(name);
             }
             catch (Exception ex)
@@ -90,7 +88,8 @@ namespace EatCode.Api.Services
         {
             try
             {
-                if (file != null) { return await repository.UploadAsync(file); }
+                if (file != null)
+                { return await repository.UploadAsync(file); }
                 return null;
             }
             catch (Exception ex)

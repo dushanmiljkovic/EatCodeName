@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Models.RequestModels
+﻿namespace Models.RequestModels
 {
     public class NutritionRequestModel
     {

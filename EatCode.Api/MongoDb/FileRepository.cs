@@ -59,7 +59,8 @@ namespace EatCode.Api.MongoDb
         public async Task DeleteAsync(string fileName)
         {
             var fileInfo = await GetFileInfoAsync(fileName);
-            if (fileInfo != null) { await DeleteAsync(fileInfo.Id); }
+            if (fileInfo != null)
+            { await DeleteAsync(fileInfo.Id); }
         }
         public async Task DeleteAsync(ObjectId id)
         {
@@ -99,9 +100,9 @@ namespace EatCode.Api.MongoDb
                 UploadDateTime = s.UploadDateTime,
             }).ToList();
         }
-         
+
         public IEnumerable<FileInfoDto> GetAllFiles(int skip, int take)
-        { 
+        {
             return gridFsBucket.Find(new BsonDocumentFilterDefinition<GridFSFileInfo<ObjectId>>(new BsonDocument()), GridFSFindOptions(skip, take))
                                      .ToList()
                                      .Select(s => new FileInfoDto

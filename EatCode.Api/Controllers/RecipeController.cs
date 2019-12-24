@@ -28,10 +28,12 @@ namespace EatCode.Api.Controllers
         {
             var mapped = mapper.Map<RecipeDTO>(request);
             var imgId = await fileService.Upload(request.File);
-            if (string.IsNullOrWhiteSpace(imgId)) { return Conflict(); }
+            if (string.IsNullOrWhiteSpace(imgId))
+            { return Conflict(); }
             mapped.FileId = imgId;
             var result = recipeService.CreateRecipe(mapped);
-            if (!result) { return Conflict(); }
+            if (!result)
+            { return Conflict(); }
             return Ok(result);
         }
 
@@ -40,7 +42,8 @@ namespace EatCode.Api.Controllers
         {
             var mapped = mapper.Map<RecipeDTO>(request);
             var result = recipeService.UpdateRecipe(mapped);
-            if (!result) { return Conflict(); }
+            if (!result)
+            { return Conflict(); }
             return Ok(result);
         }
 
@@ -49,7 +52,8 @@ namespace EatCode.Api.Controllers
         {
             var id = new Guid(guide);
             var result = recipeService.GetRecipe(id);
-            if (result == null) { return Conflict(); }
+            if (result == null)
+            { return Conflict(); }
             return Ok(result);
         }
 
@@ -63,13 +67,14 @@ namespace EatCode.Api.Controllers
             }
             return Ok(result);
         }
-         
+
         [HttpPost("delete")]
         public IActionResult DeleteRecipe(string guide)
         {
             var id = new Guid(guide);
             var result = recipeService.DeleteRecipe(id);
-            if (!result) { return Conflict(); }
+            if (!result)
+            { return Conflict(); }
             return Ok(result);
         }
     }
