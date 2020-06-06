@@ -23,6 +23,12 @@ namespace EatCode.Api.Mappings
 
             CreateMap<UpdateRecipeRequestModel, RecipeDTO>();
             CreateMap<RecipeDTO, UpdateRecipeRequestModel>();
+
+            CreateMap<DisheDTO, Dishe>();
+            CreateMap<Dishe, DisheDTO>();
+
+            CreateMap<DrinkDTO, Drink>();
+            CreateMap<Drink, DrinkDTO>();
         }
     }
 }

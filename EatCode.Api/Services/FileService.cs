@@ -88,8 +88,7 @@ namespace EatCode.Api.Services
         {
             try
             {
-                if (file != null)
-                { return await repository.UploadAsync(file); }
+                if (file != null) { return await repository.UploadAsync(file); }
                 return null;
             }
             catch (Exception ex)

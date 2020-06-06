@@ -59,8 +59,7 @@ namespace EatCode.Api.MongoDb
         public async Task DeleteAsync(string fileName)
         {
             var fileInfo = await GetFileInfoAsync(fileName);
-            if (fileInfo != null)
-            { await DeleteAsync(fileInfo.Id); }
+            if (fileInfo != null) { await DeleteAsync(fileInfo.Id); }
         }
         public async Task DeleteAsync(ObjectId id)
         {
