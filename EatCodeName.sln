@@ -15,7 +15,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EatCode.DL", "EatCode.DL", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redis.Stack", "Redis.Stack\Redis.Stack.csproj", "{6F3E8FA2-F962-4063-9D93-7D208B262859}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EatCode.SignalR", "EatCode.SignalR\EatCode.SignalR.csproj", "{189C2DA5-D725-4A0B-9538-08B34E97C9F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EatCode.SignalR", "EatCode.SignalR\EatCode.SignalR.csproj", "{189C2DA5-D725-4A0B-9538-08B34E97C9F2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MongoDB.Stack", "MongoDB.Stack\MongoDB.Stack.csproj", "{05C38AA2-873D-435F-83F5-1B9468605C56}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo.Stack", "Neo.Stack\Neo.Stack.csproj", "{B9231504-0953-406C-A817-A938632FFBB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,12 +51,22 @@ Global
 		{189C2DA5-D725-4A0B-9538-08B34E97C9F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{189C2DA5-D725-4A0B-9538-08B34E97C9F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{189C2DA5-D725-4A0B-9538-08B34E97C9F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05C38AA2-873D-435F-83F5-1B9468605C56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05C38AA2-873D-435F-83F5-1B9468605C56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05C38AA2-873D-435F-83F5-1B9468605C56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05C38AA2-873D-435F-83F5-1B9468605C56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9231504-0953-406C-A817-A938632FFBB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9231504-0953-406C-A817-A938632FFBB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9231504-0953-406C-A817-A938632FFBB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9231504-0953-406C-A817-A938632FFBB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6F3E8FA2-F962-4063-9D93-7D208B262859} = {DE52E854-4025-41AF-8784-492224E5078F}
+		{05C38AA2-873D-435F-83F5-1B9468605C56} = {DE52E854-4025-41AF-8784-492224E5078F}
+		{B9231504-0953-406C-A817-A938632FFBB9} = {DE52E854-4025-41AF-8784-492224E5078F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0BCB45E0-7314-4CFB-856A-4A0E8B52FFDF}

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Models.Domein;
 using Redis.Stack;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace EatCode.SignalR.Hubs
         {
             var redisDb = new ScoreboardStack();
             var scoreboard = redisDb.GetScoreboard();
-            var toShow = scoreboard.Select(x => new ReciteVote()
+            var toShow = scoreboard.Select(x => new RecipeVote()
             {
                 Name = x.Key,
                 Score = x.Value

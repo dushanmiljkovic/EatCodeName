@@ -4,11 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Redis.Stack
-{
-    class DefaultRedis
-    {
-    }
-
+{ 
     public class Config
     {
         /// <summary>

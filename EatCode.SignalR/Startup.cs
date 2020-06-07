@@ -51,8 +51,7 @@ namespace EatCode.SignalR
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
-                endpoints.MapHub<VoteHub>("/voteHub");
+                endpoints.MapRazorPages(); 
                 endpoints.MapHub<ChatHub>("/chatHub");
                 endpoints.MapHub<ScoreboardHub>("/scoreboarHub");
             });

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Models.Domein;
 using Redis.Stack;
 using System;
 using System.Collections.Generic;
@@ -13,19 +14,13 @@ namespace EatCode.SignalR.Hubs
         {
             var status = ParseMessage(message);
 
-            if (status)
+            if (status.Item1)
             {
                 // Send msg to chat
                 await Clients.All.SendAsync("ReceiveMessage", user, message, status);
 
-                // Update scoreboard
-                var scoreboard = GetScoreboar();
-
-                var toShow = scoreboard.Select(x => new ReciteVote()
-                {
-                    Name = x.Key,
-                    Score = x.Value
-                }).ToList();
+                // Update scoreboard 
+                var toShow = CastScoreToList(GetScoreboar());
 
                 await Clients.All.SendAsync("ReceiveScoreboar", toShow);
             }
@@ -39,9 +34,11 @@ namespace EatCode.SignalR.Hubs
             await Clients.All.SendAsync("StoreMessage", user, message, status);
         }
 
-        private bool ParseMessage(string message)
+        private (bool, string) ParseMessage(string message)
         {
             var parse = message.Split('/');
+
+            // Vote 
             if (parse.First().Trim() == "vote" && parse.Length == 3)
             {
                 var recipe = parse[1].Trim();
@@ -49,67 +46,69 @@ namespace EatCode.SignalR.Hubs
 
                 var votedResult = AddVote(recipe, score);
             }
-
-            if (parse.First().Trim() == "deleteVote" && parse.Length == 2)
+            // Delete Vote
+            else if (parse.First().Trim() == "deleteVote" && parse.Length == 2)
             {
                 var recipe = parse[1].Trim();
                 var votedResult = RemoveVote(recipe);
             }
 
-            return true;
+            return (true, message);
         }
 
         private bool AddVote(string recipe, string score)
         {
             var redisDb = new ScoreboardStack();
-
-            double dScore;
-            try
-            {
-                dScore = Convert.ToDouble(score);
-            }
-            catch
-            {
-                dScore = 0;
-            }
-            var status = redisDb.AddItemToScoreboard(recipe, dScore);
-            return status;
+            return redisDb.AddItemToScoreboard(recipe, CastStringToDouble(score));
         }
 
         private bool RemoveVote(string recipe)
         {
             var redisDb = new ScoreboardStack();
-            var status = redisDb.DeleteItemFromScoreboard(recipe);
-            return status;
+            return redisDb.DeleteItemFromScoreboard(recipe);
         }
 
         private IDictionary<string, double> GetScoreboar()
         {
             var redisDb = new ScoreboardStack();
-            var status = redisDb.GetScoreboard();
-            return status;
+            return redisDb.GetScoreboard();
         }
 
         private bool StoreVores()
         {
             var redisDb = new ScoreboardStack();
-            var status = redisDb.GetScoreboard();
+
+            var scoreboard = CastScoreToList(redisDb.GetScoreboard());
 
             var sotored = true; // store data into MongoDB
 
             if (sotored)
             {
                 var status2 = redisDb.DeleteScoreboard();
+                return status2;
             }
 
             return sotored;
         }
-    }
 
-    public class ReciteVote
-    {
-        public string Name { get; set; }
-        public double Score { get; set; }
 
+        private double CastStringToDouble(string score)
+        {
+            try
+            {
+                return Convert.ToDouble(score);
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        private List<RecipeVote> CastScoreToList(IDictionary<string, double> score)
+            => score.Select(x => new RecipeVote()
+            {
+                Name = x.Key,
+                Score = x.Value
+            }).ToList();
     }
 }
