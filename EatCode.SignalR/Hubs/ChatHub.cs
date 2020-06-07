@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using EatCode.SignalR.Services;
+using Microsoft.AspNetCore.SignalR;
 using Models.Domein;
 using Redis.Stack;
+using ServiceStack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,105 +12,125 @@ namespace EatCode.SignalR.Hubs
 {
     public class ChatHub : Hub
     {
+        private readonly string botName = "EatBot";
         public async Task SendMessage(string user, string message)
         {
-            var status = ParseMessage(message);
+            if(string.IsNullOrWhiteSpace(message) && string.IsNullOrWhiteSpace(user))
+            {  
+                await Clients.All.SendAsync("ReceiveMessage", "", "dont be shy", true);
+            }
+             
+            var messageType = MessageType.Text; 
 
-            if (status.Item1)
+            var supportedCommands = new List<string>() { BotCommand.DeleteVote.ToString(), BotCommand.ForceStore.ToString(), BotCommand.Vote.ToString() };
+            foreach (var command in supportedCommands)
             {
-                // Send msg to chat
-                await Clients.All.SendAsync("ReceiveMessage", user, message, status);
-
-                // Update scoreboard 
-                var toShow = CastScoreToList(GetScoreboar());
-
-                await Clients.All.SendAsync("ReceiveScoreboar", toShow);
+                if (message.Contains(command))
+                {
+                    messageType = MessageType.BotCommand;
+                    break;
+                } 
             }
 
+            switch (messageType) {
+
+                case MessageType.NotSupported:
+                {
+                    break;
+                } 
+                case MessageType.Text:
+                {
+                    // Send msg to chat
+                    await Clients.All.SendAsync("ReceiveMessage", user, message, true);
+                    break;
+                }
+                case MessageType.BotCommand:
+                {
+                    var scoreboardService = new ScoreboardService();
+                    var messageParsed = ParseMessage(user, message, scoreboardService);
+
+                    // Send msg to chat
+                    await Clients.All.SendAsync("ReceiveMessage", user, messageParsed.Item2, messageParsed.Item1);
+
+                    // Update scoreboard 
+                    var toShow = scoreboardService.GetScoreboarFlat();
+                    await Clients.All.SendAsync("ReceiveScoreboar", toShow);
+
+                    break;
+                }
+                default: 
+                    break; 
+            }; 
         }
 
-        public async Task SendStoreMessage(string user)
+        private (bool, string) ParseMessage(string user, string message, ScoreboardService service)
         {
-            var status = StoreVores();
-            var message = "Uspesno Storovani useri hvala lepo molim lepo";
-            await Clients.All.SendAsync("StoreMessage", user, message, status);
-        }
+            var messageToDisplay = ""; 
+            var parse = message.Split('/'); 
 
-        private (bool, string) ParseMessage(string message)
-        {
-            var parse = message.Split('/');
-
-            // Vote 
-            if (parse.First().Trim() == "vote" && parse.Length == 3)
+            if (parse.First().Trim() == BotCommand.Vote.ToString() && parse.Length >= 2)
             {
                 var recipe = parse[1].Trim();
-                var score = parse[2].Trim();
+                var score = parse.Length == 3 ? parse[2].Trim() : "0";
 
-                var votedResult = AddVote(recipe, score);
-            }
-            // Delete Vote
-            else if (parse.First().Trim() == "deleteVote" && parse.Length == 2)
+                var votedResult = service.AddVote(recipe, score);
+                if(votedResult)
+                {
+                    messageToDisplay = botName + ": " + user + " voted for " + recipe;
+                }
+                else
+                {
+                    messageToDisplay = botName + ": " + user + "faild to voted for " + recipe + "... :(";
+                } 
+                return (votedResult, messageToDisplay);
+            } 
+            else if (parse.First().Trim() == BotCommand.DeleteVote.ToString() && parse.Length == 2)
             {
                 var recipe = parse[1].Trim();
-                var votedResult = RemoveVote(recipe);
+
+                var votedResult = service.RemoveVote(recipe);
+                if (votedResult)
+                {
+                    messageToDisplay = botName + ": " + user + " deleted voted for " + recipe;
+                }
+                else
+                {
+                    messageToDisplay = botName + ": " + user + "faild to deleted voted for " + recipe + "... :(";
+                }
+                return (votedResult, messageToDisplay);
+            } 
+            else if (parse.First().Trim() == BotCommand.ForceStore.ToString() && parse.Length == 2)
+            {
+                if (parse[1].Trim() == "admin")
+                {
+                    var status = service.StoreVores();
+                    if (status)
+                    {
+                        messageToDisplay = botName + ": " + user + " stored the Scoreboard...";
+                    }
+                    else
+                    {
+                        messageToDisplay = botName + ": " + user + "faild to stored the Scoreboard";
+                    }
+                    return (status, messageToDisplay);
+                }
             }
 
-            return (true, message);
+            return (true, messageToDisplay);
         }
 
-        private bool AddVote(string recipe, string score)
+        enum MessageType
         {
-            var redisDb = new ScoreboardStack();
-            return redisDb.AddItemToScoreboard(recipe, CastStringToDouble(score));
+            NotSupported,
+            Text,
+            BotCommand
         }
 
-        private bool RemoveVote(string recipe)
+        enum BotCommand
         {
-            var redisDb = new ScoreboardStack();
-            return redisDb.DeleteItemFromScoreboard(recipe);
-        }
-
-        private IDictionary<string, double> GetScoreboar()
-        {
-            var redisDb = new ScoreboardStack();
-            return redisDb.GetScoreboard();
-        }
-
-        private bool StoreVores()
-        {
-            var redisDb = new ScoreboardStack();
-
-            var scoreboard = CastScoreToList(redisDb.GetScoreboard());
-
-            var sotored = true; // store data into MongoDB
-
-            if (sotored)
-            {
-                var status2 = redisDb.DeleteScoreboard();
-                return status2;
-            }
-
-            return sotored;
-        }
-
-
-        private double CastStringToDouble(string score)
-        {
-            try
-            {
-                return Convert.ToDouble(score);
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-
-        private List<RecipeVote> CastScoreToList(IDictionary<string, double> score)
-            => score.Select(x => new RecipeVote()
-            {
-                Name = x.Key,
-                Score = x.Value
-            }).ToList();
+            Vote,
+            DeleteVote,
+            ForceStore,
+        } 
     }
 }

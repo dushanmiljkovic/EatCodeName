@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Models\Models.csproj" />
+    <ProjectReference Include="..\MongoDB.Stack\MongoDB.Stack.csproj" />
     <ProjectReference Include="..\Redis.Stack\Redis.Stack.csproj" />
   </ItemGroup>
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver.GridFS;
+using MongoDB.Stack;
 using System;
 using System.Threading.Tasks;
 
@@ -22,9 +23,9 @@ namespace EatCode.Api.Services
         private readonly IMapper mapper;
         private readonly FileRepository repository;
 
-        public FileService(IConfiguration configuration, IMapper mapper)
+        public FileService(IMapper mapper)
         {
-            repository = new FileRepository(configuration);
+            repository = new FileRepository();
             this.mapper = mapper;
         }
 

@@ -1,4 +1,5 @@
-﻿using ServiceStack.Redis;
+﻿using Models.Domein;
+using ServiceStack.Redis;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,19 +9,17 @@ namespace Redis.Stack
     public class DefaultStack
     {
         readonly RedisClient redis = new RedisClient(Config.SingleHost);
+        readonly string recipeRankings = "RecipeRankings";
 
-        public DefaultStack()
-        {
+        public DefaultStack() {  }
 
-        }
-
-        public void Test()
+        public void InserRecipeLink(string dishId, string recipeId)
         {
             try
             {
                 var redisTest = redis.As<RecipeLinking>();
 
-                var test = new RecipeLinking { DishId = "1", RecipeId = "1", Id = redisTest.GetNextSequence() };
+                var test = new RecipeLinking { DishId = dishId, RecipeId = recipeId, Id = redisTest.GetNextSequence() };
 
                 redisTest.Store(test);
             }
@@ -30,7 +29,7 @@ namespace Redis.Stack
             }
         }
 
-        public IList<RecipeLinking> Test2()
+        public IList<RecipeLinking> GetAllRecipeLinking()
         {
             try
             {
@@ -44,40 +43,32 @@ namespace Redis.Stack
             }
         }
 
-        public void Test4()
+        public void InsertString(string value)
         {
             try
-            {
-                string value = "Grasak";
+            { 
                 byte[] stringToByte = Encoding.ASCII.GetBytes(value);
-                var test = redis.ZAdd("RecipeRankings", 1, stringToByte);
+                var test = redis.ZAdd(recipeRankings, 1, stringToByte);
             }
             catch(Exception ex)
             {
-
+                var log = ex.ToString();
             }
         }
 
-        public List<string> Test5()
+        public List<string> GetAllRecipeRanks()
         {
             try
             {
               
-                var test = redis.GetAllItemsFromSortedSet("RecipeRankings");
-                return test;
+                var status = redis.GetAllItemsFromSortedSet("RecipeRankings");
+                return status;
             }
             catch (Exception ex)
             {
-                var test = ex.ToString();
+                var log = ex.ToString();
                 return null;
             }
         }
-    }
-    public class RecipeLinking
-    {
-        public long Id { get; set; }
-        public string RecipeId { get; set; }
-        public string DishId { get; set; }
-
     } 
 }

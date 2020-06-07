@@ -3,6 +3,7 @@ using EatCode.Api.MongoDb;
 using Microsoft.Extensions.Configuration;
 using Models.Domein;
 using Models.DTO;
+using MongoDB.Stack;
 using System;
 using System.Collections.Generic;
 
@@ -13,9 +14,9 @@ namespace EatCode.Api.Services
         private readonly IMapper mapper;
         private readonly RecipeRepository repository;
 
-        public RecipeService(IConfiguration configuration, IMapper mapper)
+        public RecipeService(IMapper mapper)
         {
-            repository = new RecipeRepository(configuration);
+            repository = new RecipeRepository();
             this.mapper = mapper;
         }
 

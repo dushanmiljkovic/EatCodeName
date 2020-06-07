@@ -8,4 +8,8 @@
     <PackageReference Include="ServiceStack.Redis" Version="5.8.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Models\Models.csproj" />
+  </ItemGroup>
+
 </Project>
