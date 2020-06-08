@@ -54,7 +54,7 @@ namespace HF.Run
             app.UseHangfireServer(options);
             app.UseHangfireDashboard();
 
-            RecurringJob.AddOrUpdate<StoreScoreJob>(StoreScoreJob.JobId, j => j.Run(null, null), Cron.Minutely);
+            RecurringJob.AddOrUpdate<StoreScoreJob>(StoreScoreJob.JobId, j => j.Run(null, null), Cron.Daily);
 
             if (env.IsDevelopment())
             {

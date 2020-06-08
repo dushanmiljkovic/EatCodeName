@@ -2,6 +2,7 @@
 using Hangfire.Console;
 using Hangfire.Server;
 using HF.Run.Redis;
+using HF.Run.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,19 +12,29 @@ namespace HF.Run.Jobs
 {
     public class StoreScoreJob
     {
-        public const string JobId = "StoreScoreJob";
-        private readonly RedisDb client;
+        public const string JobId = "StoreScoreJob"; 
         public StoreScoreJob()
         {
-            client = new RedisDb();
+           
         }
 
         public async Task Run(PerformContext context, IJobCancellationToken cancellationToken)
         {
-            context.WriteLine("Job Started");
-            //client.Test();
-            // Redis stuff here :) 
-            context.WriteLine("Job Ended");
+            context.WriteLine("Job Started"+ DateTime.UtcNow);
+             
+
+            var storageService =new ScoreboardService();
+            var status = storageService.StoreVotes(JobId); 
+            if(status)
+            {
+                context.WriteLine("Daily votes are stored and scoreboar is clear!");
+            }
+            else
+            {
+                context.WriteLine("Storing FAILD BE READY");
+            } 
+
+            context.WriteLine("Job Ended" + DateTime.UtcNow);
         }
 
     }

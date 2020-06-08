@@ -103,7 +103,7 @@ namespace EatCode.SignalR.Hubs
             {
                 if (parse[1].Trim() == "admin")
                 {
-                    var status = service.StoreVores();
+                    var status = service.StoreVotes(user);
                     if (status)
                     {
                         messageToDisplay = botName + ": " + user + " stored the Scoreboard...";
