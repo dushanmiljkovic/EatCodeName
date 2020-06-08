@@ -30,3 +30,5 @@ ToDo's:
 3. Transaction style 
 4. Weekly scoreboard. Every monday calc prevouse week votes and create PDF.
 5. Authorization 
+6. Move hardcoded settings to config
+7. Style to the chat please

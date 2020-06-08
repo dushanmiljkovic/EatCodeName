@@ -19,11 +19,11 @@ namespace EatCode.SignalR.Services
             scoreboardRedisStack = new ScoreboardStack();
         }
 
-        public bool AddVote(string recipe, string score)
+        public bool AddVote(string recipe, double score)
         {
             try
-            {
-                return scoreboardRedisStack.AddItemToScoreboard(recipe, CastStringToDouble(score));
+            { 
+                return scoreboardRedisStack.AddItemToScoreboard(recipe,  score);
             }
             catch (Exception ex)
             {
@@ -112,19 +112,7 @@ namespace EatCode.SignalR.Services
                 return false;
             }
         }
-
-        private double CastStringToDouble(string score)
-        {
-            try
-            {
-                return Convert.ToDouble(score);
-            }
-            catch
-            {
-                return 0;
-            }
-        }
-
+         
         private List<RecipeVote> CastScoreToList(IDictionary<string, double> score)
             => score.Select(x => new RecipeVote()
             {

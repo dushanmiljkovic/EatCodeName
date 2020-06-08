@@ -34,10 +34,6 @@ namespace EatCode.SignalR.Hubs
 
             switch (messageType) {
 
-                case MessageType.NotSupported:
-                {
-                    break;
-                } 
                 case MessageType.Text:
                 {
                     // Send msg to chat
@@ -71,7 +67,9 @@ namespace EatCode.SignalR.Hubs
             if (parse.First().Trim() == BotCommand.Vote.ToString() && parse.Length >= 2)
             {
                 var recipe = parse[1].Trim();
-                var score = parse.Length == 3 ? parse[2].Trim() : "0";
+                
+                var score = CastStringToDouble (parse.Length == 3 ? parse[2].Trim() : "1");
+                if(score > 10) { score = 10; }
 
                 var votedResult = service.AddVote(recipe, score);
                 if(votedResult)
@@ -101,7 +99,7 @@ namespace EatCode.SignalR.Hubs
             } 
             else if (parse.First().Trim() == BotCommand.ForceStore.ToString() && parse.Length == 2)
             {
-                if (parse[1].Trim() == "admin")
+                if (parse[1].Trim() == "test123")
                 {
                     var status = service.StoreVotes(user);
                     if (status)
@@ -117,6 +115,19 @@ namespace EatCode.SignalR.Hubs
             }
 
             return (true, messageToDisplay);
+        }
+         
+        // Cast Vote from string to double, if its invalid string by default it will be casted to 1
+        private static double CastStringToDouble(string score)
+        {
+            try
+            {
+                return Convert.ToDouble(score);
+            }
+            catch
+            {
+                return 1;
+            }
         }
 
         enum MessageType
