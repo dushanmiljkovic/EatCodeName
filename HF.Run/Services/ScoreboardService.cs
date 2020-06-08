@@ -24,13 +24,10 @@ namespace HF.Run.Services
             try
             {
                 var scoreboardDTO = CastScoreToList(scoreboardRedisStack.GetScoreboard());
-                var sotored = PermaStoreVotes(user, scoreboardDTO);  
-                if (sotored)
-                {
-                    var status2 = scoreboardRedisStack.DeleteScoreboard();
-                    return status2;
-                }
-                return sotored;
+
+                if (!PermaStoreVotes(user, scoreboardDTO)) { return false; }
+
+                return scoreboardRedisStack.DeleteScoreboard();
             }
             catch (Exception ex)
             {
@@ -53,7 +50,7 @@ namespace HF.Run.Services
                     VotesCount = recipeVotes.Count
                 };
                 scoreboardMongoRepository.InsertRecord<ScoreboeadTable>(scoreboeadTable);
-                 
+
                 return true;
             }
             catch (Exception ex)

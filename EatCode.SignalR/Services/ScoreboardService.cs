@@ -75,14 +75,11 @@ namespace EatCode.SignalR.Services
         {
             try
             {
-                var scoreboardDTO = CastScoreToList(scoreboardRedisStack.GetScoreboard());
-                var sotored = PermaStoreVotes(user,scoreboardDTO); // store data into MongoDB 
-                if (sotored)
-                {
-                    var status2 = scoreboardRedisStack.DeleteScoreboard();
-                    return status2;
-                }
-                return sotored;
+                var scoreboardDTO = CastScoreToList(scoreboardRedisStack.GetScoreboard()); 
+
+                if (!PermaStoreVotes(user, scoreboardDTO)) { return false; }
+
+                return scoreboardRedisStack.DeleteScoreboard(); 
             }
             catch (Exception ex)
             {
@@ -91,13 +88,13 @@ namespace EatCode.SignalR.Services
             }
         }
 
-        public bool PermaStoreVotes(string user,List<RecipeVote> recipeVotes)
+        public bool PermaStoreVotes(string user, List<RecipeVote> recipeVotes)
         {
             try
             {
                 var scoreboeadTable = new ScoreboeadTable()
                 {
-                    Name = "Forced by" + user,
+                    Name = "Forced by: " + user,
                     Type = Models.Enums.ScoreboeadType.Forced,
                     StoredBy = user,
                     StoredDate = DateTime.UtcNow,
