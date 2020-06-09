@@ -1,17 +1,17 @@
-﻿using ServiceStack;
-using ServiceStack.Redis;
+﻿using ServiceStack.Redis;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Redis.Stack
 {
     public class ScoreboardStack
     {
-        readonly RedisClient redis = new RedisClient(Config.SingleHost);
-        readonly string scoreboardId = "recipeScoreboard";
+        private readonly RedisClient redis = new RedisClient(Config.SingleHost);
+        private readonly string scoreboardId = "recipeScoreboard";
 
-        public ScoreboardStack() { }
+        public ScoreboardStack()
+        {
+        }
 
         public bool AddItemToScoreboard(string item, double score = 0)
         {
@@ -24,7 +24,6 @@ namespace Redis.Stack
                 }
                 _ = redis.IncrementItemInSortedSet(scoreboardId, item, score);
                 return true;
-
             }
             catch (Exception ex)
             {
@@ -45,6 +44,7 @@ namespace Redis.Stack
                 return null;
             }
         }
+
         public bool DeleteItemFromScoreboard(string item)
         {
             try
@@ -58,6 +58,7 @@ namespace Redis.Stack
                 return false;
             }
         }
+
         public bool DeleteScoreboard()
         {
             try
@@ -71,6 +72,5 @@ namespace Redis.Stack
                 return false;
             }
         }
-
     }
 }

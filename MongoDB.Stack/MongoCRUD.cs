@@ -4,13 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-
 namespace MongoDB.Stack
 {
     public abstract class MongoCRUD
     {
         protected IMongoDatabase _contex;
         private readonly string tableName;
+
         public MongoCRUD(string connectionString, string database, string tableName)
         {
             var client = new MongoClient(connectionString);

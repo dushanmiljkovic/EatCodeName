@@ -24,7 +24,7 @@ namespace EatCode.Api.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> CreateRecipe([FromForm]CreateRecipeRequestModel request)
+        public async Task<IActionResult> CreateRecipe([FromForm] CreateRecipeRequestModel request)
         {
             var mapped = mapper.Map<RecipeDTO>(request);
             var imgId = await fileService.Upload(request.File);
@@ -47,6 +47,8 @@ namespace EatCode.Api.Controllers
         [HttpGet("{guide}")]
         public IActionResult GetRecipe(string guide)
         {
+            if (string.IsNullOrEmpty(guide)) { return BadRequest(); }
+
             var id = new Guid(guide);
             var result = recipeService.GetRecipe(id);
             if (result == null) { return Conflict(); }
@@ -64,6 +66,8 @@ namespace EatCode.Api.Controllers
         [HttpPost("delete")]
         public IActionResult DeleteRecipe(string guide)
         {
+            if (string.IsNullOrEmpty(guide)) { return BadRequest(); }
+
             var id = new Guid(guide);
             var result = recipeService.DeleteRecipe(id);
             if (!result) { return Conflict(); }

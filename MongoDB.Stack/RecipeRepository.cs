@@ -2,7 +2,6 @@
 using Models.Enums;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace MongoDB.Stack
 {
@@ -14,12 +13,11 @@ namespace MongoDB.Stack
         private static readonly string Database = "Cookbook";
         private static readonly string TableName = "Recipes";
 
-
         public RecipeRepository()
             : base(FoodConnection,
                   Database,
                   TableName)
-        { 
+        {
             this.tableName = TableName;
             //Seed();
         }

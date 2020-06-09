@@ -8,10 +8,12 @@ namespace Redis.Stack
 {
     public class DefaultStack
     {
-        readonly RedisClient redis = new RedisClient(Config.SingleHost);
-        readonly string recipeRankings = "RecipeRankings";
+        private readonly RedisClient redis = new RedisClient(Config.SingleHost);
+        private readonly string recipeRankings = "RecipeRankings";
 
-        public DefaultStack() {  }
+        public DefaultStack()
+        {
+        }
 
         public void InserRecipeLink(string dishId, string recipeId)
         {
@@ -46,11 +48,11 @@ namespace Redis.Stack
         public void InsertString(string value)
         {
             try
-            { 
+            {
                 byte[] stringToByte = Encoding.ASCII.GetBytes(value);
                 var test = redis.ZAdd(recipeRankings, 1, stringToByte);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var log = ex.ToString();
             }
@@ -60,7 +62,6 @@ namespace Redis.Stack
         {
             try
             {
-              
                 var status = redis.GetAllItemsFromSortedSet("RecipeRankings");
                 return status;
             }
@@ -70,5 +71,5 @@ namespace Redis.Stack
                 return null;
             }
         }
-    } 
+    }
 }

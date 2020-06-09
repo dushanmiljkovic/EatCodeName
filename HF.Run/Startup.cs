@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Hangfire;
+﻿using Hangfire;
 using Hangfire.Mongo;
 using HF.Run.Jobs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace HF.Run
 {
     public class Startup
     {
         private readonly IConfiguration configuration;
+
         public Startup(IConfiguration configuration)
         {
             this.configuration = configuration;
@@ -28,7 +22,6 @@ namespace HF.Run
         {
             services.AddHangfire(config =>
             {
-
                 var connectionString = configuration.GetConnectionString("DefaultConnection");
 
                 var migrationOptions = new MongoStorageOptions
@@ -40,7 +33,6 @@ namespace HF.Run
                     }
                 };
                 config.UseMongoStorage(connectionString, migrationOptions);
-
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

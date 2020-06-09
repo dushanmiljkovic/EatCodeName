@@ -1,7 +1,7 @@
 ﻿"use strict";
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
-  
+
 document.getElementById("sendButton").disabled = true;
 
 connection.on("ReceiveMessage", function (user, message, status) {
@@ -11,7 +11,7 @@ connection.on("ReceiveMessage", function (user, message, status) {
     li.textContent = encodedMsg;
     document.getElementById("messagesList").appendChild(li);
 });
- 
+
 connection.start().then(function () {
     document.getElementById("sendButton").disabled = false;
 }).catch(function (err) {

@@ -1,10 +1,7 @@
 ﻿using ServiceStack.Redis;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Redis.Stack
-{ 
+{
     public class Config
     {
         /// <summary>
@@ -14,7 +11,9 @@ namespace Redis.Stack
         {
             get { return "localhost"; }
         }
+
         public const int RedisPort = 6379;
+
         public static string SingleHostConnectionString
         {
             get
@@ -22,6 +21,7 @@ namespace Redis.Stack
                 return SingleHost + ":" + RedisPort;
             }
         }
+
         public static BasicRedisClientManager BasicClientManger
         {
             get

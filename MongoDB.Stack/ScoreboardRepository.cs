@@ -1,7 +1,5 @@
 ﻿using Models.Domein;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MongoDB.Stack
 {
@@ -32,7 +30,6 @@ namespace MongoDB.Stack
             var collection = _contex.GetCollection<T>(tableName);
             collection.InsertOne(record);
         }
-
 
         public override void Seed()
         {

@@ -11,14 +11,10 @@ using Settings;
 
 namespace EatCode.Api
 {
-
-    //"5d9a4349750d6d40a4dbd782"
-    //{a47fbae9-442b-4199-aa88-3e83021baa0c
-    //}
-
     public class Startup
     {
         public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration) => Configuration = configuration;
 
         public void ConfigureServices(IServiceCollection services)

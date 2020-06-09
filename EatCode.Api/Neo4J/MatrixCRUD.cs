@@ -9,7 +9,6 @@ using Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace EatCode.Api.Neo4J
 {
@@ -17,12 +16,14 @@ namespace EatCode.Api.Neo4J
     {
         private MatrixSettings matrixSettings;
         private readonly IMapper mapper;
+
         private string GenerateStringId() => Guid.NewGuid().ToString();
+
         private GraphClient GetGraphClient() => new GraphClient(new Uri(matrixSettings.ConnectionString), matrixSettings.Username, matrixSettings.Password);
 
         public MatrixCRUD(IOptions<MatrixSettings> settings, IMapper mapper)
         {
-            // Dont forget to start a services :) 
+            // Dont forget to start a services :)
             this.matrixSettings = settings.Value;
             this.mapper = mapper;
         }
@@ -50,6 +51,7 @@ namespace EatCode.Api.Neo4J
                 return null;
             }
         }
+
         public Dishe GetSpecificDish(string id)
         {
             try
@@ -92,7 +94,7 @@ namespace EatCode.Api.Neo4J
                 return null;
             }
         }
-       
+
         public bool UpdateDrink(DrinkDTO model)
         {
             try
@@ -113,7 +115,7 @@ namespace EatCode.Api.Neo4J
                 return false;
             }
         }
-        
+
         //Delete all inbound rel's
         public bool DeleteDrink(string id)
         {
@@ -134,7 +136,7 @@ namespace EatCode.Api.Neo4J
                 return false;
             }
         }
-        
+
         public Drink GetSpecificDrink(string id)
         {
             try
@@ -167,7 +169,6 @@ namespace EatCode.Api.Neo4J
                        .Create($"(drink)-[:{relation}]->(dishe)")
                        .ExecuteWithoutResults();
 
-
                 return true;
             }
             catch (Exception ex)
@@ -176,7 +177,7 @@ namespace EatCode.Api.Neo4J
                 return false;
             }
         }
-       
+
         public (Dishe, long) GetSpecificDishWithGoesWithCount(string id)
         {
             try
@@ -214,16 +215,59 @@ namespace EatCode.Api.Neo4J
                               Dishe = dishe.As<Dishe>(),
                               Drinks = drink.CollectAs<Drink>()
                           }).Results.Select(o => (o.Dishe, o.Drinks.ToList())).FirstOrDefault();
-
-
             }
             catch (Exception ex)
             {
                 return (null, null);
             }
         }
-          
+
+        public (Dishe, long) GetSpecificDishWithNeverCount(string id)
+        {
+            try
+            {
+                var client = GetGraphClient();
+                client.Connect();
+
+                return client.Cypher
+                          .OptionalMatch("(dishe:Dishe)-[Never]-(drink:Drink)")
+                          .Where((Dishe dishe) => dishe.Id == id)
+                          .Return((dishe, drink) => new
+                          {
+                              Dishe = dishe.As<Dishe>(),
+                              Count = drink.Count()
+                          }).Results.Select(o => (o.Dishe, o.Count)).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                return (null, 0);
+            }
+        }
+
+        public (Dishe, List<Drink>) GetSpecificDishWithNeverDrinks(string id)
+        {
+            try
+            {
+                var client = GetGraphClient();
+                client.Connect();
+
+                return client.Cypher
+                          .OptionalMatch("(dishe:Dishe)-[Never]-(drink:Drink)")
+                          .Where((Dishe dishe) => dishe.Id == id)
+                          .Return((dishe, drink) => new
+                          {
+                              Dishe = dishe.As<Dishe>(),
+                              Drinks = drink.CollectAs<Drink>()
+                          }).Results.Select(o => (o.Dishe, o.Drinks.ToList())).FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                return (null, null);
+            }
+        }
+
         #region Dont open
+
         public void YouHadToDoItNowDoomIsHERE(string pswrd)
         {
             // we all know it
@@ -250,6 +294,7 @@ namespace EatCode.Api.Neo4J
                 Serilog.Log.Error(ex.Message);
             }
         }
-        #endregion
+
+        #endregion Dont open
     }
 }

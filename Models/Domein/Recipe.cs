@@ -9,6 +9,7 @@ namespace Models.Domein
     {
         [BsonId]
         public Guid Id { get; set; }
+
         public string Name { get; set; }
         public int? PrepTime { get; set; } //in mins
         public int? CookTime { get; set; } //in mins
@@ -21,6 +22,4 @@ namespace Models.Domein
         public string Description { get; set; }
         public string FileId { get; set; }
     }
-
-
 }

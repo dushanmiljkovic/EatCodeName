@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Models.Domein
+﻿namespace Models.Domein
 {
     public enum DisheDrink
     {
@@ -27,5 +23,4 @@ namespace Models.Domein
     {
         Contain
     }
-
 }

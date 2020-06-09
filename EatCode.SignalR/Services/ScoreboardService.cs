@@ -4,14 +4,13 @@ using Redis.Stack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace EatCode.SignalR.Services
 {
     public class ScoreboardService
     {
-        readonly ScoreboardRepository scoreboardMongoRepository;
-        readonly ScoreboardStack scoreboardRedisStack;
+        private readonly ScoreboardRepository scoreboardMongoRepository;
+        private readonly ScoreboardStack scoreboardRedisStack;
 
         public ScoreboardService()
         {
@@ -22,16 +21,16 @@ namespace EatCode.SignalR.Services
         public bool AddVote(string recipe, double score)
         {
             try
-            { 
-                return scoreboardRedisStack.AddItemToScoreboard(recipe,  score);
+            {
+                return scoreboardRedisStack.AddItemToScoreboard(recipe, score);
             }
             catch (Exception ex)
             {
                 var log = ex;
                 return false;
             }
-
         }
+
         public bool RemoveVote(string recipe)
         {
             try
@@ -75,11 +74,11 @@ namespace EatCode.SignalR.Services
         {
             try
             {
-                var scoreboardDTO = CastScoreToList(scoreboardRedisStack.GetScoreboard()); 
+                var scoreboardDTO = CastScoreToList(scoreboardRedisStack.GetScoreboard());
 
                 if (!PermaStoreVotes(user, scoreboardDTO)) { return false; }
 
-                return scoreboardRedisStack.DeleteScoreboard(); 
+                return scoreboardRedisStack.DeleteScoreboard();
             }
             catch (Exception ex)
             {
@@ -103,7 +102,6 @@ namespace EatCode.SignalR.Services
                 };
                 scoreboardMongoRepository.InsertRecord<ScoreboeadTable>(scoreboeadTable);
 
-
                 return true;
             }
             catch (Exception ex)
@@ -112,7 +110,7 @@ namespace EatCode.SignalR.Services
                 return false;
             }
         }
-         
+
         private List<RecipeVote> CastScoreToList(IDictionary<string, double> score)
             => score.Select(x => new RecipeVote()
             {

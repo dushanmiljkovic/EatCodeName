@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using EatCode.Api.MongoDb;
-using Microsoft.Extensions.Configuration;
 using Models.Domein;
 using Models.DTO;
 using MongoDB.Stack;

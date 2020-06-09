@@ -4,14 +4,13 @@ using Redis.Stack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace HF.Run.Services
 {
     public class ScoreboardService
     {
-        readonly ScoreboardRepository scoreboardMongoRepository;
-        readonly ScoreboardStack scoreboardRedisStack;
+        private readonly ScoreboardRepository scoreboardMongoRepository;
+        private readonly ScoreboardStack scoreboardRedisStack;
 
         public ScoreboardService()
         {

@@ -1,6 +1,4 @@
-﻿
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Models.DTO;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -20,15 +18,14 @@ namespace MongoDB.Stack
         private static string FoodConnection = "mongodb://localhost:27017/";
         private static string Database = "Cookbook";
         private static string TableName = "Files";
-         
 
         private IGridFSBucket gridFsBucket { get; }
+
         public FileRepository()
             : base(FoodConnection,
                   Database,
                   TableName)
         {
-
             this.tableName = TableName;
             gridFsBucket = new GridFSBucket(_contex);
         }
@@ -69,6 +66,7 @@ namespace MongoDB.Stack
             var fileInfo = await GetFileInfoAsync(fileName);
             if (fileInfo != null) { await DeleteAsync(fileInfo.Id); }
         }
+
         public async Task DeleteAsync(ObjectId id)
         {
             await gridFsBucket.DeleteAsync(id);
@@ -121,6 +119,7 @@ namespace MongoDB.Stack
                                          UploadDateTime = s.UploadDateTime,
                                      }).ToList();
         }
+
         private static GridFSFindOptions GridFSFindOptions(int skip, int take)
             => new GridFSFindOptions
             {

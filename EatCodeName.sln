@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MongoDB.Stack", "MongoDB.St
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neo.Stack", "Neo.Stack\Neo.Stack.csproj", "{B9231504-0953-406C-A817-A938632FFBB9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EatCode.FrontEnd", "EatCode.FrontEnd", "{EEDAE85D-5E44-44BC-ABA2-4E0D35FE4751}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

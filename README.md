@@ -32,3 +32,16 @@ ToDo's:
 5. Authorization 
 6. Move hardcoded settings to config
 7. Style to the chat please
+
+Matrix Service Functionality:
+1. string CreateDishe(DisheDTO model)
+2. Dishe GetSpecificDish(string id)
+3. string CreateDrink(DrinkDTO model)
+4. bool UpdateDrink(DrinkDTO model)
+5. bool DeleteDrink(string id) //Delete all inbound rel's
+6. Drink GetSpecificDrink(string id)
+7. bool RelateDisheDrink(string disheId, string drinkId, DisheDrink relation)
+8. (Dishe, long) GetSpecificDishWithGoesWithCount(string id)
+9. (Dishe, List<Drink>) GetSpecificDishWithGoesWithDrinks(string id)
+
+	

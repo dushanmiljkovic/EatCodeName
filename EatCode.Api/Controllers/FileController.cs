@@ -15,7 +15,7 @@ namespace EatCode.Api.Controllers
         {
             this.fileService = fileService;
         }
-         
+
         [HttpGet("get-by-file-name/{fileName}")]
         public async Task<IActionResult> GetByFileName(string fileName)
         {
@@ -35,7 +35,7 @@ namespace EatCode.Api.Controllers
         }
 
         [HttpPost("upload-image")]
-        public async Task<IActionResult> Upload([FromForm]IFormFile file)
+        public async Task<IActionResult> Upload([FromForm] IFormFile file)
         {
             if (file != null)
             {
@@ -51,7 +51,7 @@ namespace EatCode.Api.Controllers
         }
 
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadFile([FromForm]IFormFile file)
+        public async Task<IActionResult> UploadFile([FromForm] IFormFile file)
         {
             if (file == null)
             { return NoContent(); }

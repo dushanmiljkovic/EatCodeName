@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using EatCode.Api.MongoDb;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
 using MongoDB.Driver.GridFS;
 using MongoDB.Stack;
@@ -13,11 +11,16 @@ namespace EatCode.Api.Services
     public interface IFileService
     {
         Task<string> Upload(IFormFile file);
+
         Task<byte[]> DownloadAsyncAsByte(string id);
+
         Task<GridFSDownloadStream<ObjectId>> DownloadAsyncAsStreamById(string id);
+
         Task<GridFSDownloadStream<ObjectId>> DownloadAsyncAsStreamByName(string name);
+
         Task<bool> DeleteFile(string id);
     }
+
     public class FileService : IFileService
     {
         private readonly IMapper mapper;

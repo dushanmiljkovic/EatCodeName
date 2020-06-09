@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Models.Domein;
 using Redis.Stack;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 namespace EatCode.SignalR.Hubs
 {
     public class ScoreboardHub : Hub

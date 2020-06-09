@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MongoDB.Stack
 {
@@ -10,8 +8,8 @@ namespace MongoDB.Stack
 
         private static string FoodConnection = "mongodb://localhost:27017/";
         private static string Database = "Cookbook";
-        private static string  TableName = "Feedback";
-         
+        private static string TableName = "Feedback";
+
         public FeedbackRepository()
             : base(FoodConnection,
                   Database,
@@ -27,4 +25,3 @@ namespace MongoDB.Stack
         }
     }
 }
- 
