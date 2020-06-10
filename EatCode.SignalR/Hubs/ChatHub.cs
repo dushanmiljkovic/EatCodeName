@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Threading.Tasks;
 
 namespace EatCode.SignalR.Hubs
@@ -10,13 +11,21 @@ namespace EatCode.SignalR.Hubs
     public class ChatHub : Hub
     {
         private readonly string botName = "EatBot";
+        public override async Task OnConnectedAsync()
+        {
+            await Clients.All.SendAsync("ReceiveMessageHistory", GetChatHistoryAsList());
+        }
 
         public async Task SendMessage(string user, string message)
         {
+             
             if (string.IsNullOrWhiteSpace(message) && string.IsNullOrWhiteSpace(user))
             {
-                await Clients.All.SendAsync("ReceiveMessage", "", "dont be shy", true);
+                await Clients.All.SendAsync("ReceiveMessage", "anonimo", "dont be shy", true);
+                return;
             }
+
+            if (string.IsNullOrWhiteSpace(user)) { user = "anonimo"; }
 
             var messageType = MessageType.Text;
 
@@ -33,25 +42,30 @@ namespace EatCode.SignalR.Hubs
             switch (messageType)
             {
                 case MessageType.Text:
-                {
-                    // Send msg to chat
-                    await Clients.All.SendAsync("ReceiveMessage", user, message, true);
-                    break;
-                }
+                    {
+                        var chatHistoryService = new ChatHistoryService();
+                        chatHistoryService.AddToHistory(message);
+                        // Send msg to chat
+                        await Clients.All.SendAsync("ReceiveMessage", user, message, true);
+                        break;
+                    }
                 case MessageType.BotCommand:
-                {
-                    var scoreboardService = new ScoreboardService();
-                    var messageParsed = ParseMessage(user, message, scoreboardService);
+                    {
+                        var chatHistoryService = new ChatHistoryService();
+                        chatHistoryService.AddToHistory(message);
 
-                    // Send msg to chat
-                    await Clients.All.SendAsync("ReceiveMessage", user, messageParsed.Item2, messageParsed.Item1);
+                        var scoreboardService = new ScoreboardService();
+                        var messageParsed = ParseMessage(user, message, scoreboardService);
 
-                    // Update scoreboard
-                    var toShow = scoreboardService.GetScoreboarFlat();
-                    await Clients.All.SendAsync("ReceiveScoreboar", toShow);
+                        // Send msg to chat
+                        await Clients.All.SendAsync("ReceiveMessage", user, messageParsed.Item2, messageParsed.Item1);
 
-                    break;
-                }
+                        // Update scoreboard
+                        var toShow = scoreboardService.GetScoreboarFlat().OrderByDescending(o => o.Score);
+                        await Clients.All.SendAsync("ReceiveScoreboar", toShow);
+
+                        break;
+                    }
                 default:
                     break;
             };
@@ -113,6 +127,13 @@ namespace EatCode.SignalR.Hubs
             }
 
             return (true, messageToDisplay);
+        }
+
+        private List<string> GetChatHistoryAsList()
+        {
+            var chatHistoryService = new ChatHistoryService();
+            var historyTest = chatHistoryService.GetChatHistory(10);
+            return historyTest;
         }
 
         // Cast Vote from string to double, if its invalid string by default it will be casted to 1

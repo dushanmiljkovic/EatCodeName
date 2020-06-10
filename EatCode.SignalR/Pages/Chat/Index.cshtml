@@ -1,39 +1,36 @@
 ﻿@page
-<div class="container">
-    <div class="row">&nbsp;</div>
+    <div class="container">
+        <div class="row">&nbsp;</div>
 
-    <div class="row">
-        <ul id="comands">
-            <li> Vote / recipeName / score <em>score is caped (10), also score is by default 1 :) </em></li>
-            <li> DeleteVote / recipeName / score</li>
-            <li> ForceStore / pasword <em>we all know the password (test123)</em></li>
-        </ul>
-    </div>
-
-    <div class="row">
-        <div class="col-2">User</div>
-        <div class="col-4"><input type="text" id="userInput" /></div>
-    </div>
-    <div class="row">
-        <div class="col-2">Message</div>
-        <div class="col-4"><input type="text" id="messageInput" /></div>
-    </div>
-    <div class="row">&nbsp;</div>
-    <div class="row">
-        <div class="col-6">
-            <input type="button" id="sendButton" value="Send Message" />
+        <div class="row">
+            <ul id="comands">
+                <li> Vote / recipeName / score <em>score is caped (10), also score is by default 1 :) </em></li>
+                <li> DeleteVote / recipeName / score</li>
+                <li> ForceStore / pasword <em>we all know the password (test123)</em></li>
+            </ul>
+        </div>
+        <div>
+            <div class="form-group">
+                <label for="userInput">User</label>
+                <input type="email" class="form-control" id="userInput" placeholder="Enter User Name">
+            </div>
+            <div class="form-group">
+                <label for="messageInput">Message</label>
+                <input type="text" class="form-control" id="messageInput" placeholder="Message">
+            </div>
+            <button type="button" id="sendButton" class="btn btn-primary">Send</button>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <hr />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <ul id="messagesList" class="list-group"></ul>
+            </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        <hr />
-    </div>
-</div>
-<div class="row">
-    <div class="col-6">
-        <ul id="messagesList"></ul>
-    </div>
-</div>
-<script src="~/js/signalr/dist/browser/signalr.js"></script>
-<script src="~/js/chat.js"></script>
+ 
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/chat.js"></script>

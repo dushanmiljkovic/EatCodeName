@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Models.Domein;
 using Redis.Stack;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,14 +11,25 @@ namespace EatCode.SignalR.Hubs
     {
         public async Task ShowScoreboar()
         {
+          
+            await Clients.All.SendAsync("ReceiveScoreboar", GetScoreboardAsList());
+        }
+
+        public override async Task OnConnectedAsync()
+        {
+            await Clients.All.SendAsync("ReceiveScoreboar", GetScoreboardAsList());
+        }
+
+        private IList<RecipeVote> GetScoreboardAsList()
+        {
             var redisDb = new ScoreboardStack();
             var scoreboard = redisDb.GetScoreboard();
-            var toShow = scoreboard.Select(x => new RecipeVote()
+            return scoreboard.Select(x => new RecipeVote()
             {
                 Name = x.Key,
                 Score = x.Value
-            }).ToList();
-            await Clients.All.SendAsync("ReceiveScoreboar", toShow);
+            }).OrderByDescending(o => o.Score).ToList(); 
         }
+
     }
 }
