@@ -1,4 +1,6 @@
-﻿using ServiceStack.Redis;
+﻿using Microsoft.Extensions.Options;
+using ServiceStack.Redis;
+using Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +13,11 @@ namespace Redis.Stack
         private readonly RedisClient redis = new RedisClient(Config.SingleHost);
         private readonly string chatHistoryID = "chatHistory";
 
-        public ChatStack()
+        public ChatStack(IOptions<RedisSettings> settings)
         {
+            if (string.IsNullOrWhiteSpace(settings.Value.ConnectionString)) { throw new Exception("Missing setting"); }
+
+            redis = new RedisClient(settings.Value.ConnectionString);
         }
 
         public bool AddItemToChatHistory(string item)

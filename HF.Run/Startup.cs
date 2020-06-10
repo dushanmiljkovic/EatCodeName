@@ -1,11 +1,13 @@
 ﻿using Hangfire;
 using Hangfire.Mongo;
 using HF.Run.Jobs;
+using HF.Run.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Settings;
 
 namespace HF.Run
 {
@@ -20,6 +22,11 @@ namespace HF.Run
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ScoreboardMongoDbSettings>(options => configuration.GetSection("MongoDbSettings").Bind(options));
+            services.Configure<RedisSettings>(options => configuration.GetSection("RedisSettings").Bind(options));
+
+            services.AddTransient<IScoreboardService, ScoreboardService>(); 
+
             services.AddHangfire(config =>
             {
                 var connectionString = configuration.GetConnectionString("DefaultConnection");

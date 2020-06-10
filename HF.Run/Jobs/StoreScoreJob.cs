@@ -10,17 +10,18 @@ namespace HF.Run.Jobs
     public class StoreScoreJob
     {
         public const string JobId = "StoreScoreJob";
+        private readonly IScoreboardService scoreboardService;
 
-        public StoreScoreJob()
+        public StoreScoreJob(IScoreboardService scoreboardService)
         {
+            this.scoreboardService = scoreboardService;
         }
 
         public async Task Run(PerformContext context, IJobCancellationToken cancellationToken)
         {
             context.WriteLine("Job Started" + DateTime.UtcNow);
-
-            var storageService = new ScoreboardService();
-            var status = storageService.StoreVotes(JobId);
+             
+            var status = scoreboardService.StoreVotes(JobId);
             if (status)
             {
                 context.WriteLine("Daily votes are stored and scoreboar is clear!");

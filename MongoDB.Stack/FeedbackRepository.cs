@@ -1,22 +1,17 @@
-﻿using System;
+﻿using Microsoft.Extensions.Options;
+using Settings;
+using System;
 
 namespace MongoDB.Stack
 {
     public class FeedbackRepository : MongoCRUD
-    {
-        private string tableName;
-
-        private static string FoodConnection = "mongodb://localhost:27017/";
-        private static string Database = "Cookbook";
-        private static string TableName = "Feedback";
-
-        public FeedbackRepository()
-            : base(FoodConnection,
-                  Database,
-                  TableName)
+    { 
+        public FeedbackRepository(IOptions<FeedbackMongoDbSettings> settings)
+            : base(settings.Value.Connection,
+                  settings.Value.Database,
+                  settings.Value.TableNameFeedback)
         {
-            //SeedDB();
-            this.tableName = TableName;
+ 
         }
 
         public override void Seed()

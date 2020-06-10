@@ -1,9 +1,11 @@
 using EatCode.SignalR.Hubs;
+using EatCode.SignalR.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Settings;
 
 namespace EatCode.SignalR
 {
@@ -19,8 +21,15 @@ namespace EatCode.SignalR
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ScoreboardMongoDbSettings>(options => Configuration.GetSection("MongoDbSettings").Bind(options));
+            services.Configure<RedisSettings>(options => Configuration.GetSection("RedisSettings").Bind(options));
+
+            services.AddTransient<IChatHistoryService, ChatHistoryService>();
+            services.AddTransient<IScoreboardService, ScoreboardService>();
+
             services.AddRazorPages();
             services.AddSignalR();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

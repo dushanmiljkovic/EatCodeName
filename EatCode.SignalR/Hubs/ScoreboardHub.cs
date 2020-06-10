@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using EatCode.SignalR.Services;
+using Microsoft.AspNetCore.SignalR;
 using Models.Domein;
 using Redis.Stack;
 using System.Collections.Generic;
@@ -9,27 +10,20 @@ namespace EatCode.SignalR.Hubs
 {
     public class ScoreboardHub : Hub
     {
+        private readonly IScoreboardService scoreboardService;
+        public ScoreboardHub(IScoreboardService scoreboardService)
+        {
+            this.scoreboardService = scoreboardService;
+        }
         public async Task ShowScoreboar()
         {
           
-            await Clients.All.SendAsync("ReceiveScoreboar", GetScoreboardAsList());
+            await Clients.All.SendAsync("ReceiveScoreboar", scoreboardService.GetScoreboarFlat().OrderByDescending(o => o.Score).ToList());
         }
 
         public override async Task OnConnectedAsync()
         {
-            await Clients.All.SendAsync("ReceiveScoreboar", GetScoreboardAsList());
-        }
-
-        private IList<RecipeVote> GetScoreboardAsList()
-        {
-            var redisDb = new ScoreboardStack();
-            var scoreboard = redisDb.GetScoreboard();
-            return scoreboard.Select(x => new RecipeVote()
-            {
-                Name = x.Key,
-                Score = x.Value
-            }).OrderByDescending(o => o.Score).ToList(); 
-        }
-
+            await Clients.All.SendAsync("ReceiveScoreboar", scoreboardService.GetScoreboarFlat().OrderByDescending(o => o.Score).ToList());
+        } 
     }
 }

@@ -1,21 +1,23 @@
-﻿using Models.Domein;
+﻿using Microsoft.Extensions.Options;
+using Models.Domein;
 using MongoDB.Stack;
 using Redis.Stack;
+using Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace EatCode.SignalR.Services
 {
-    public class ScoreboardService
+    public class ScoreboardService : IScoreboardService
     {
         private readonly ScoreboardRepository scoreboardMongoRepository;
         private readonly ScoreboardStack scoreboardRedisStack;
 
-        public ScoreboardService()
+        public ScoreboardService(IOptions<RedisSettings> redisSettings, IOptions<ScoreboardMongoDbSettings> mongoDbSettings)
         {
-            scoreboardMongoRepository = new ScoreboardRepository();
-            scoreboardRedisStack = new ScoreboardStack();
+            scoreboardMongoRepository = new ScoreboardRepository(mongoDbSettings);
+            scoreboardRedisStack = new ScoreboardStack(redisSettings);
         }
 
         public bool AddVote(string recipe, double score)

@@ -30,6 +30,10 @@ namespace EatCode.Api
 
             services.Configure<MatrixSettings>(options => Configuration.GetSection("MatrixSettings").Bind(options));
 
+            services.Configure<FilesMongoDbSettings>(options => Configuration.GetSection("MongoDbSettings").Bind(options));
+            services.Configure<RecipesMongoDbSettings>(options => Configuration.GetSection("MongoDbSettings").Bind(options));
+            services.Configure<ScoreboardMongoDbSettings>(options => Configuration.GetSection("MongoDbSettings").Bind(options));
+
             services.AddTransient<IRecipeService, RecipeService>();
             services.AddTransient<IFileService, FileService>();
             services.AddTransient<IMatrixService, MatrixCRUD>();

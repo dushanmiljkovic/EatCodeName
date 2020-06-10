@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Models.DTO;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
+using Settings;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,21 +14,14 @@ using System.Threading.Tasks;
 namespace MongoDB.Stack
 {
     public class FileRepository : MongoCRUD
-    {
-        private string tableName;
+    { 
+        private IGridFSBucket gridFsBucket { get; } 
 
-        private static string FoodConnection = "mongodb://localhost:27017/";
-        private static string Database = "Cookbook";
-        private static string TableName = "Files";
-
-        private IGridFSBucket gridFsBucket { get; }
-
-        public FileRepository()
-            : base(FoodConnection,
-                  Database,
-                  TableName)
-        {
-            this.tableName = TableName;
+        public FileRepository(IOptions<FilesMongoDbSettings> settings)
+            : base(settings.Value.Connection,
+                  settings.Value.Database,
+                  settings.Value.TableNameFiles)
+        { 
             gridFsBucket = new GridFSBucket(_contex);
         }
 

@@ -6,10 +6,12 @@
 
   <ItemGroup>
     <PackageReference Include="ServiceStack.Redis" Version="5.8.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Models\Models.csproj" />
+    <ProjectReference Include="..\Settings\Settings.csproj" />
   </ItemGroup>
 
 </Project>

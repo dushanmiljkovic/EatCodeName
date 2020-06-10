@@ -1,23 +1,19 @@
-﻿using Models.Domein;
+﻿using Microsoft.Extensions.Options;
+using Models.Domein;
+using Settings;
 using System;
 
 namespace MongoDB.Stack
 {
     public class ScoreboardRepository : MongoCRUD
     {
-        private string tableName;
-
-        private static string FoodConnection = "mongodb://localhost:27017/";
-        private static string Database = "Cookbook";
-        private static string TableName = "Scoreboards";
-
-        public ScoreboardRepository()
-            : base(FoodConnection,
-                  Database,
-                  TableName)
-        {
-            //SeedDB();
-            this.tableName = TableName;
+        private string tableName;  
+        public ScoreboardRepository(IOptions<ScoreboardMongoDbSettings> settings)
+            : base(settings.Value.Connection,
+                  settings.Value.Database,
+                  settings.Value.TableNameScoreboard)
+        { 
+            this.tableName = settings.Value.TableNameScoreboard;
         }
 
         public override void InsertRecord<T>(T record)

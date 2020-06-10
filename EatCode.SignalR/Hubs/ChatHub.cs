@@ -11,6 +11,15 @@ namespace EatCode.SignalR.Hubs
     public class ChatHub : Hub
     {
         private readonly string botName = "EatBot";
+        private readonly IScoreboardService scoreboardService;
+        private readonly IChatHistoryService chatHistoryService;
+
+        public ChatHub(IScoreboardService scoreboardService, IChatHistoryService chatHistoryService)
+        {
+            this.scoreboardService = scoreboardService;
+            this.chatHistoryService = chatHistoryService;
+        }
+
         public override async Task OnConnectedAsync()
         {
             await Clients.All.SendAsync("ReceiveMessageHistory", GetChatHistoryAsList());
@@ -43,18 +52,18 @@ namespace EatCode.SignalR.Hubs
             {
                 case MessageType.Text:
                     {
-                        var chatHistoryService = new ChatHistoryService();
-                        chatHistoryService.AddToHistory(message);
+                      
+                    chatHistoryService.AddToHistory(message);
                         // Send msg to chat
                         await Clients.All.SendAsync("ReceiveMessage", user, message, true);
                         break;
                     }
                 case MessageType.BotCommand:
                     {
-                        var chatHistoryService = new ChatHistoryService();
-                        chatHistoryService.AddToHistory(message);
+                      
+                    chatHistoryService.AddToHistory(message);
 
-                        var scoreboardService = new ScoreboardService();
+                        
                         var messageParsed = ParseMessage(user, message, scoreboardService);
 
                         // Send msg to chat
@@ -71,7 +80,7 @@ namespace EatCode.SignalR.Hubs
             };
         }
 
-        private (bool, string) ParseMessage(string user, string message, ScoreboardService service)
+        private (bool, string) ParseMessage(string user, string message, IScoreboardService service)
         {
             var messageToDisplay = "";
             var parse = message.Split('/');
@@ -131,7 +140,7 @@ namespace EatCode.SignalR.Hubs
 
         private List<string> GetChatHistoryAsList()
         {
-            var chatHistoryService = new ChatHistoryService();
+            
             var historyTest = chatHistoryService.GetChatHistory(10);
             return historyTest;
         }

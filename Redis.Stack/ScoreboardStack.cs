@@ -1,4 +1,6 @@
-﻿using ServiceStack.Redis;
+﻿using Microsoft.Extensions.Options;
+using ServiceStack.Redis;
+using Settings;
 using System;
 using System.Collections.Generic;
 
@@ -6,11 +8,14 @@ namespace Redis.Stack
 {
     public class ScoreboardStack
     {
-        private readonly RedisClient redis = new RedisClient(Config.SingleHost);
+        private readonly RedisClient redis; //= new RedisClient(Config.SingleHost);
         private readonly string scoreboardId = "recipeScoreboard";
 
-        public ScoreboardStack()
+        public ScoreboardStack(IOptions<RedisSettings> settings)
         {
+            if (string.IsNullOrWhiteSpace(settings.Value.ConnectionString)) { throw new Exception("Missing setting"); }
+
+            redis = new RedisClient(settings.Value.ConnectionString);
         }
 
         public bool AddItemToScoreboard(string item, double score = 0)

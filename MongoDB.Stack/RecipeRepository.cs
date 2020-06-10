@@ -1,5 +1,7 @@
-﻿using Models.Domein;
+﻿using Microsoft.Extensions.Options;
+using Models.Domein;
 using Models.Enums;
+using Settings;
 using System;
 using System.Collections.Generic;
 
@@ -7,18 +9,13 @@ namespace MongoDB.Stack
 {
     public class RecipeRepository : MongoCRUD
     {
-        private readonly string tableName;
-
-        private static readonly string FoodConnection = "mongodb://localhost:27017/";
-        private static readonly string Database = "Cookbook";
-        private static readonly string TableName = "Recipes";
-
-        public RecipeRepository()
-            : base(FoodConnection,
-                  Database,
-                  TableName)
+        private readonly string tableName; 
+        public RecipeRepository(IOptions<RecipesMongoDbSettings> settings)
+            : base(settings.Value.Connection,
+                  settings.Value.Database,
+                  settings.Value.TableNameRecipes)
         {
-            this.tableName = TableName;
+            this.tableName = settings.Value.TableNameRecipes;
             //Seed();
         }
 
