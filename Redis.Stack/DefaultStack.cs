@@ -1,5 +1,7 @@
-﻿using Models.Domein;
+﻿using Microsoft.Extensions.Options;
+using Models.Domein;
 using ServiceStack.Redis;
+using Settings;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,11 +10,13 @@ namespace Redis.Stack
 {
     public class DefaultStack
     {
-        private readonly RedisClient redis = new RedisClient(Config.SingleHost);
+        private readonly RedisClient redis;
         private readonly string recipeRankings = "RecipeRankings";
 
-        public DefaultStack()
+        public DefaultStack(IOptions<RedisSettings> settings)
         {
+            if (string.IsNullOrWhiteSpace(settings.Value.ConnectionString)) { throw new Exception("Missing setting"); } 
+            redis = new RedisClient(settings.Value.ConnectionString);
         }
 
         public void InserRecipeLink(string dishId, string recipeId)
@@ -49,7 +53,7 @@ namespace Redis.Stack
         {
             try
             {
-                byte[] stringToByte = Encoding.ASCII.GetBytes(value);
+                var stringToByte = Encoding.ASCII.GetBytes(value);
                 var test = redis.ZAdd(recipeRankings, 1, stringToByte);
             }
             catch (Exception ex)

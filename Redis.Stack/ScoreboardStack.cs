@@ -8,7 +8,7 @@ namespace Redis.Stack
 {
     public class ScoreboardStack
     {
-        private readonly RedisClient redis; //= new RedisClient(Config.SingleHost);
+        private readonly RedisClient redis;
         private readonly string scoreboardId = "recipeScoreboard";
 
         public ScoreboardStack(IOptions<RedisSettings> settings)

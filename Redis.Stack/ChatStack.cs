@@ -10,7 +10,7 @@ namespace Redis.Stack
 {
     public class ChatStack
     {
-        private readonly RedisClient redis = new RedisClient(Config.SingleHost);
+        private readonly RedisClient redis;
         private readonly string chatHistoryID = "chatHistory";
 
         public ChatStack(IOptions<RedisSettings> settings)
