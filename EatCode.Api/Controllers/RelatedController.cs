@@ -17,8 +17,8 @@ namespace EatCode.Api.Controllers
             this.matrixService = matrixService;
         }
 
-        [HttpGet("create-dishe")]
-        public async Task<IActionResult> CreateDishe(DisheDTO dishe)
+        [HttpPost("create-dishe")]
+        public async Task<IActionResult> CreateDishe([FromForm] DisheDTO dishe)
         {
             dishe.Id = null;
             var result = matrixService.CreateDishe(dishe);
@@ -37,8 +37,8 @@ namespace EatCode.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("create-drink")]
-        public async Task<IActionResult> CreateDrink(DrinkDTO model)
+        [HttpPost("create-drink")]
+        public async Task<IActionResult> CreateDrink([FromForm] DrinkDTO model)
         {
             model.Id = null;
             var result = matrixService.CreateDrink(model);
