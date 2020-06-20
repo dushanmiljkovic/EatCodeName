@@ -26,6 +26,15 @@ namespace EatCode.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("dishe/all")]
+        public async Task<IActionResult> GetDishs()
+        { 
+            var result = matrixService.GetDishs();
+            if (result == null) { return Conflict(); }
+
+            return Ok(result);
+        }
+
         [HttpGet("dishe/{id}")]
         public async Task<IActionResult> GetDishe(string id)
         {
@@ -52,6 +61,15 @@ namespace EatCode.Api.Controllers
             if (string.IsNullOrEmpty(id)) { return BadRequest(); }
 
             var result = matrixService.GetSpecificDrink(id);
+            if (result == null) { return Conflict(); }
+
+            return Ok(result);
+        }
+
+        [HttpGet("drink/all")]
+        public async Task<IActionResult> GetDrinks()
+        {
+            var result = matrixService.GetDrinks();
             if (result == null) { return Conflict(); }
 
             return Ok(result);

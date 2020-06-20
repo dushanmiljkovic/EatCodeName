@@ -70,6 +70,23 @@ namespace EatCode.Api.Neo4J
             }
         }
 
+        public List<Dishe> GetDishs()
+        {
+            try
+            {
+                var client = GetGraphClient();
+                client.Connect();
+                return client.Cypher
+                      .Match("(dishe:Dishe)") 
+                      .Return(dishe => dishe.As<Dishe>())
+                      .Results.ToList();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public string CreateDrink(DrinkDTO model)
         {
             try
@@ -154,7 +171,22 @@ namespace EatCode.Api.Neo4J
                 return null;
             }
         }
-
+        public List<Drink> GetDrinks()
+        {
+            try
+            {
+                var client = GetGraphClient();
+                client.Connect();
+                return client.Cypher
+                      .Match("(drink:Drink)")
+                      .Return(dishe => dishe.As<Drink>())
+                      .Results.ToList();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
         public bool RelateDisheDrink(string disheId, string drinkId, DisheDrink relation)
         {
             try

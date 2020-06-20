@@ -7,12 +7,13 @@ namespace EatCode.Api.Services
     public interface IMatrixService
     {
         string CreateDishe(DisheDTO model);
-
         Dishe GetSpecificDish(string id);
+        List<Dishe> GetDishs();
 
         string CreateDrink(DrinkDTO model);
 
         Drink GetSpecificDrink(string id);
+        List<Drink> GetDrinks();
 
         bool UpdateDrink(DrinkDTO model);
 

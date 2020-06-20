@@ -69,7 +69,7 @@ namespace EatCode.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPost("delete")]
+        [HttpGet("delete/{guide}")]
         public IActionResult DeleteRecipe(string guide)
         {
             if (string.IsNullOrEmpty(guide)) { return BadRequest(); }
