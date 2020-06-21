@@ -47,7 +47,7 @@ namespace MongoDB.Stack
                 new BsonDocument("_id", id)
                 , record
                 , new UpdateOptions { IsUpsert = true });
-            return result.UpsertedId.ToString();
+            return result.UpsertedId == null ? id.ToString() : result.UpsertedId.ToString();
         }
 
         public void DeleteRecord<T>(Guid id)

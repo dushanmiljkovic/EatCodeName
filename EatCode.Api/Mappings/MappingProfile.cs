@@ -12,8 +12,14 @@ namespace EatCode.Api.Mappings
             CreateMap<Ingredient, IngredientDTO>();
             CreateMap<IngredientDTO, Ingredient>();
 
+            CreateMap<IngredientRequestModel, IngredientDTO>();
+            CreateMap<IngredientDTO, IngredientRequestModel>();
+
             CreateMap<Nutrition, NutritionDTO>();
             CreateMap<NutritionDTO, Nutrition>();
+             
+            CreateMap<NutritionRequestModel, NutritionDTO>();
+            CreateMap<NutritionDTO, NutritionRequestModel>();
 
             CreateMap<RecipeDTO, Recipe>();
             CreateMap<Recipe, RecipeDTO>();
