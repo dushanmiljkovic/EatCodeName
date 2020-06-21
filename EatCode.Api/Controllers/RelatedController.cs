@@ -18,7 +18,7 @@ namespace EatCode.Api.Controllers
         }
 
         [HttpPost("create-dishe")]
-        public async Task<IActionResult> CreateDishe([FromForm] DisheDTO dishe)
+        public async Task<IActionResult> CreateDishe(DisheDTO dishe)
         {
             dishe.Id = null;
             var result = matrixService.CreateDishe(dishe);
@@ -28,7 +28,7 @@ namespace EatCode.Api.Controllers
 
         [HttpGet("dishe/all")]
         public async Task<IActionResult> GetDishs()
-        { 
+        {
             var result = matrixService.GetDishs();
             if (result == null) { return Conflict(); }
 
@@ -47,7 +47,7 @@ namespace EatCode.Api.Controllers
         }
 
         [HttpPost("create-drink")]
-        public async Task<IActionResult> CreateDrink([FromForm] DrinkDTO model)
+        public async Task<IActionResult> CreateDrink(DrinkDTO model)
         {
             model.Id = null;
             var result = matrixService.CreateDrink(model);
@@ -98,7 +98,7 @@ namespace EatCode.Api.Controllers
         }
 
         [HttpPost("relate-drink-dish")]
-        public async Task<IActionResult> RelateDisheDrink([FromForm] RelateDisheDrinkRequestModel model)
+        public async Task<IActionResult> RelateDisheDrink(RelateDisheDrinkRequestModel model)
         {
             if (string.IsNullOrEmpty(model.DisheId)) { return BadRequest(); }
             if (string.IsNullOrEmpty(model.DrinkId)) { return BadRequest(); }
