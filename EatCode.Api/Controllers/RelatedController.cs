@@ -142,6 +142,19 @@ namespace EatCode.Api.Controllers
             return Ok(result);
         }
 
+        [HttpPost("derelate-drink-dish")]
+        public async Task<IActionResult> DerelateDisheDrink(RelateDisheDrinkRequestModel model)
+        {
+            if (string.IsNullOrEmpty(model.DisheId)) { return BadRequest(); }
+            if (string.IsNullOrEmpty(model.DrinkId)) { return BadRequest(); }
+
+            var result = matrixService.DeleteRelateDisheDrink(model.DisheId, model.DrinkId, model.Relation);
+            if (!result) { return Conflict(); }
+
+            return Ok(result);
+        }
+
+
         #region Test: Not production Ready
 
         [HttpGet("create-dishe-test")]
@@ -149,13 +162,13 @@ namespace EatCode.Api.Controllers
         {
             var dish = new DisheDTO
             {
-                Name = "Kacamak",
+                Name = "SarmiceNjamNjam1",
                 Season = "Every"
             };
 
             var drink = new DrinkDTO
             {
-                Name = "Mleko",
+                Name = "Pavlaka1",
             };
 
             var dishId = matrixService.CreateDishe(dish);
@@ -163,6 +176,8 @@ namespace EatCode.Api.Controllers
 
             var finalResult = matrixService.RelateDisheDrink(dishId, drinkId, Models.Domein.DisheDrink.GoesWith);
             var finalResult2 = matrixService.GetSpecificDishWithGoesWithDrinks(dishId);
+
+            var test = matrixService.DeleteRelateDisheDrink(dishId, drinkId, Models.Domein.DisheDrink.GoesWith);
 
             return Ok(finalResult2);
         }

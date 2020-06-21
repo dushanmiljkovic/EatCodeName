@@ -28,5 +28,8 @@ namespace EatCode.Api.Services
         (Dishe, long) GetSpecificDishWithNeverCount(string id);
 
         (Dishe, List<Drink>) GetSpecificDishWithNeverDrinks(string id);
+        
+        //Delete reation between items 
+        bool DeleteRelateDisheDrink(string disheId, string drinkId, DisheDrink relation);
     }
 }

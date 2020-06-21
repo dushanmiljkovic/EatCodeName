@@ -77,7 +77,7 @@ namespace EatCode.Api.Neo4J
                 var client = GetGraphClient();
                 client.Connect();
                 return client.Cypher
-                      .Match("(dishe:Dishe)") 
+                      .Match("(dishe:Dishe)")
                       .Return(dishe => dishe.As<Dishe>())
                       .Results.ToList();
             }
@@ -200,6 +200,30 @@ namespace EatCode.Api.Neo4J
                        .AndWhere((Drink drink) => drink.Id == drinkId)
                        .Create($"(drink)-[:{relation}]->(dishe)")
                        .ExecuteWithoutResults();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Serilog.Log.Error(ex.Message);
+                return false;
+            }
+        }
+
+        public bool DeleteRelateDisheDrink(string disheId, string drinkId, DisheDrink relation)
+        {
+            try
+            {
+                var client = GetGraphClient();
+                client.Connect();
+
+                client.Cypher
+                       .Match("(dishe:Dishe)", "(drink:Drink)")
+                        .OptionalMatch($"(drink)-[r:{relation}]->(dishe)")
+                       .Where((Dishe dishe) => dishe.Id == disheId)
+                       .AndWhere((Drink drink) => drink.Id == drinkId) 
+                      .Delete("r")
+                      .ExecuteWithoutResults(); 
 
                 return true;
             }
