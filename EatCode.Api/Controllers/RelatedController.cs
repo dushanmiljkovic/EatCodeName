@@ -109,7 +109,7 @@ namespace EatCode.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("dish-has-good-drink/{id}")]
+        [HttpGet("dish-has-good-drink/{dishId}")]
         public async Task<IActionResult> DishDrinkLikesCount(string dishId)
         {
             if (string.IsNullOrEmpty(dishId)) { return BadRequest(); }

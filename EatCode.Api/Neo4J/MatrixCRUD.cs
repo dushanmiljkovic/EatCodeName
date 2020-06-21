@@ -179,7 +179,7 @@ namespace EatCode.Api.Neo4J
                 client.Connect();
                 return client.Cypher
                       .Match("(drink:Drink)")
-                      .Return(dishe => dishe.As<Drink>())
+                      .Return(drink => drink.As<Drink>())
                       .Results.ToList();
             }
             catch (Exception ex)
