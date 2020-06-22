@@ -20,7 +20,6 @@ namespace EatCode.Api.Controllers
         [HttpPost("create-dishe")]
         public async Task<IActionResult> CreateDishe(DisheDTO dishe)
         {
-            dishe.Id = null;
             var result = matrixService.CreateDishe(dishe);
             if (string.IsNullOrEmpty(result)) { return Conflict(); }
             return Ok(result);
@@ -49,7 +48,6 @@ namespace EatCode.Api.Controllers
         [HttpPost("create-drink")]
         public async Task<IActionResult> CreateDrink(DrinkDTO model)
         {
-            model.Id = null;
             var result = matrixService.CreateDrink(model);
             if (string.IsNullOrEmpty(result)) { return Conflict(); }
             return Ok(result);
@@ -75,7 +73,7 @@ namespace EatCode.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("update-drink/{id}")]
+        [HttpPost("update-drink/{id}")]
         public async Task<IActionResult> UpdateDrink(DrinkDTO model)
         {
             if (string.IsNullOrEmpty(model.Id)) { return BadRequest(); }
@@ -126,7 +124,7 @@ namespace EatCode.Api.Controllers
             if (string.IsNullOrEmpty(dishId)) { return BadRequest(); }
 
             var result = matrixService.GetSpecificDishWithGoesWithDrinks(dishId);
-            if (result.Item1 == null) { return Conflict(); }
+            if (result.Item1 == null && result.Item2 == null) { return Conflict(); }
 
             return Ok(result);
         }
@@ -136,8 +134,8 @@ namespace EatCode.Api.Controllers
         {
             if (string.IsNullOrEmpty(dishId)) { return BadRequest(); }
 
-            var result = matrixService.GetSpecificDishWithGoesWithDrinks(dishId);
-            if (result.Item1 == null) { return Conflict(); }
+            var result = matrixService.GetSpecificDishWithNeverDrinks(dishId);
+            if (result.Item1 == null && result.Item2 == null) { return Conflict(); }
 
             return Ok(result);
         }
@@ -153,69 +151,5 @@ namespace EatCode.Api.Controllers
 
             return Ok(result);
         }
-
-
-        #region Test: Not production Ready
-
-        [HttpGet("create-dishe-test")]
-        public async Task<IActionResult> CreateRecipe()
-        {
-            var dish = new DisheDTO
-            {
-                Name = "SarmiceNjamNjam1",
-                Season = "Every"
-            };
-
-            var drink = new DrinkDTO
-            {
-                Name = "Pavlaka1",
-            };
-
-            var dishId = matrixService.CreateDishe(dish);
-            var drinkId = matrixService.CreateDrink(drink);
-
-            var finalResult = matrixService.RelateDisheDrink(dishId, drinkId, Models.Domein.DisheDrink.GoesWith);
-            var finalResult2 = matrixService.GetSpecificDishWithGoesWithDrinks(dishId);
-
-            var test = matrixService.DeleteRelateDisheDrink(dishId, drinkId, Models.Domein.DisheDrink.GoesWith);
-
-            return Ok(finalResult2);
-        }
-
-        [HttpGet("test")]
-        public async Task<IActionResult> Test()
-        {
-            var dish = new DisheDTO
-            {
-                Name = "Drobeno",
-                Season = "Every"
-            };
-
-            var dishId = matrixService.CreateDishe(dish);
-            var drinkId = "4b4c1036-448f-43c5-91a7-922eebc00aef";
-
-            var finalResult = matrixService.RelateDisheDrink(dishId, drinkId, Models.Domein.DisheDrink.GoesWith);
-
-            return Ok(finalResult);
-        }
-
-        [HttpGet("test2")]
-        public async Task<IActionResult> Test2()
-        {
-            var dish = new DisheDTO
-            {
-                Name = "Kupus",
-                Season = "Every"
-            };
-
-            var dishId = matrixService.CreateDishe(dish);
-            var drinkId = "4b4c1036-448f-43c5-91a7-922eebc00aef";
-
-            var finalResult = matrixService.RelateDisheDrink(dishId, drinkId, Models.Domein.DisheDrink.Never);
-
-            return Ok(finalResult);
-        }
-
-        #endregion Test: Not production Ready
     }
 }

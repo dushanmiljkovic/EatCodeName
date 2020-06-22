@@ -123,7 +123,7 @@ namespace EatCode.Api.Neo4J
                          .Match("(drink:Drink)")
                             .Where((Drink drink) => drink.Id == model.Id)
                                .Set("drink = {updated}")
-                                 .WithParam("updated", new Drink { Name = model.Name, AlcoholLevel = model.AlcoholLevel, FileId = model.FileId, Type = model.Type })
+                                 .WithParam("updated", new Drink {Id= model.Id, Name = model.Name, AlcoholLevel = model.AlcoholLevel, FileId = model.FileId, Type = model.Type })
                                     .ExecuteWithoutResults();
                 return true;
             }
@@ -142,10 +142,9 @@ namespace EatCode.Api.Neo4J
                 client.Connect();
 
                 client.Cypher
-                      .OptionalMatch("(drink:Drink)<-[r]-()")
+                      .OptionalMatch("(drink:Drink)-[r]->()")
                       .Where((Drink drink) => drink.Id == id)
-                      .Delete("r, drink")
-                      .ExecuteWithoutResults();
+                      .Delete("r, drink").ExecuteWithoutResults();
                 return true;
             }
             catch (Exception ex)
@@ -241,8 +240,8 @@ namespace EatCode.Api.Neo4J
                 var client = GetGraphClient();
                 client.Connect();
 
-                return client.Cypher
-                          .OptionalMatch("(dishe:Dishe)-[GoesWith]-(drink:Drink)")
+                return client.Cypher 
+                          .OptionalMatch("(drink:Drink)-[GoesWith]->(dishe:Dishe)")
                           .Where((Dishe dishe) => dishe.Id == id)
                           .Return((dishe, drink) => new
                           {
@@ -264,7 +263,8 @@ namespace EatCode.Api.Neo4J
                 client.Connect();
 
                 return client.Cypher
-                          .OptionalMatch("(dishe:Dishe)-[GoesWith]-(drink:Drink)")
+                          //.OptionalMatch("(dishe:Dishe)-[GoesWith]-(drink:Drink)")
+                          .OptionalMatch("(drink:Drink)-[r:GoesWith]->(dishe:Dishe)")
                           .Where((Dishe dishe) => dishe.Id == id)
                           .Return((dishe, drink) => new
                           {
@@ -285,8 +285,8 @@ namespace EatCode.Api.Neo4J
                 var client = GetGraphClient();
                 client.Connect();
 
-                return client.Cypher
-                          .OptionalMatch("(dishe:Dishe)-[Never]-(drink:Drink)")
+                return client.Cypher 
+                          .OptionalMatch("(drink:Drink)-[:Never]->(dishe:Dishe)")
                           .Where((Dishe dishe) => dishe.Id == id)
                           .Return((dishe, drink) => new
                           {
@@ -308,7 +308,8 @@ namespace EatCode.Api.Neo4J
                 client.Connect();
 
                 return client.Cypher
-                          .OptionalMatch("(dishe:Dishe)-[Never]-(drink:Drink)")
+                          //.OptionalMatch("(dishe:Dishe)-[Never]-(drink:Drink)")
+                          .OptionalMatch("(drink:Drink)-[:Never]->(dishe:Dishe)")
                           .Where((Dishe dishe) => dishe.Id == id)
                           .Return((dishe, drink) => new
                           {
